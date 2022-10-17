@@ -46,9 +46,10 @@ val_set = arrays_to_dataset(val_x, val_f, batch_size=alen**2)
 
 
 # set up training
-training_configs = [{'lr': 1e-2, 'bs': 100, 'epochs': 2000},
-                    {'lr': 1e-3, 'bs': 100, 'epochs': 2000},
-                    {'lr': 1e-4, 'bs': 100, 'epochs': 1000}]
+training_configs = [{'lr': 1e-2, 'bs': 100, 'epochs': 500},
+                    {'lr': 1e-3, 'bs': 100, 'epochs': 500},
+                    {'lr': 1e-4, 'bs': 100, 'epochs': 500},
+                    {'lr': 1e-5, 'bs': 100, 'epochs': 500}]
 
 
 def train_model(model, training_configs):
