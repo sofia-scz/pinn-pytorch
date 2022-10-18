@@ -46,10 +46,10 @@ val_set = arrays_to_dataset(val_x, val_f, batch_size=alen**2)
 
 
 # set up training
-training_configs = [{'lr': 1e-2, 'bs': 100, 'epochs': 500},
-                    {'lr': 1e-3, 'bs': 100, 'epochs': 500},
-                    {'lr': 1e-4, 'bs': 100, 'epochs': 500},
-                    {'lr': 1e-5, 'bs': 100, 'epochs': 500}]
+training_configs = [{'lr': 1e-2, 'bs': 1000, 'epochs': 600},
+                    {'lr': 1e-3, 'bs': 1000, 'epochs': 2000},
+                    {'lr': 1e-4, 'bs': 1000, 'epochs': 200},
+                    {'lr': 1e-5, 'bs': 1000, 'epochs': 200}]
 
 
 def train_model(model, training_configs):
@@ -90,6 +90,7 @@ model.add_loss_fn(loss_fn)
 
 # train model
 epochs, tloss, vloss = train_model(model, training_configs)
+model.save_nn('ff_model')
 
 # process results
 
@@ -115,14 +116,17 @@ axes[0].set_yscale('log')
 axes[0].legend()
 
 # plot results
-mappable = axes[1].contourf(X, Y, F, levels=20, cmap='viridis', vmin=vmin,
-                            vmax=vmax)
+map1 = axes[1].contourf(X, Y, F, levels=20, cmap='viridis', vmin=vmin,
+                        vmax=vmax)
 axes[1].set_title('Validation')
 
-mappable = axes[2].contourf(X, Y, F_, levels=20, cmap='viridis', vmin=vmin,
-                            vmax=vmax)
+map2 = axes[2].contourf(X, Y, F_, levels=20, cmap='viridis', vmin=vmin,
+                        vmax=vmax)
 axes[2].set_title('Predicted')
 
-fig.colorbar(mappable=mappable, ax=axes.ravel().tolist())
+for ax in axes[1:]:
+    ax.set_aspect('equal', adjustable='box')
+
+fig.colorbar(mappable=map1, ax=axes.ravel().tolist())
 # end
 plt.show()

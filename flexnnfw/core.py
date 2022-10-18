@@ -22,8 +22,11 @@ class Interpol:
             return self.net(x).detach().numpy()
         # test if numpy array
         elif isinstance(x, np.ndarray):
-            return self.net(
-                Tensor(x.reshape(len(x), self.input_len))).detach().numpy()
+            if x.shape == (self.input_len, ):
+                return self.net(Tensor(x.astype('float64'))).detach().numpy()
+            elif len(x[0]) == self.input_len and len(x) > 1:
+                new_shape = (len(x), self.input_len)
+                return self.net(Tensor(x.reshape(new_shape))).detach().numpy()
 
     def add_loss_fn(self, loss_fn):
         self.loss_fn = loss_fn
@@ -71,6 +74,15 @@ class Interpol:
                 val_loss += self.loss_fn(pred, f).item()
 
         return train_loss, val_loss
+
+    def save_nn(self, path):
+        torch.save(self.net.state_dict(), path)
+        pass
+
+    def load_nn(self, path):
+        self.net.load_state_dict(torch.load(path))
+        self.net.eval()
+        pass
 
 
 ##############################################################################
@@ -127,3 +139,12 @@ class PINN:
         train_loss = loss.item()
 
         return train_loss
+
+    def save_nn(self, path):
+        torch.save(self.net.state_dict(), path)
+        pass
+
+    def load_nn(self, path):
+        self.net.load_state_dict(torch.load(path))
+        self.net.eval()
+        pass
